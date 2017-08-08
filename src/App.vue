@@ -1,35 +1,85 @@
 <template>
-  <div>
-    <h1>{{ titulo }}</h1>
-    <ul>
-      <li v-for="foto of fotos">
-        <img :src="foto.url" :alt="foto.titulo">
+  <div class="corpo">
+    <h1 class="centralizado">{{ titulo }}</h1>
+
+    <input type="search" class="filtro" placeholder="Digite o título da imagem" @input="filtro = $event.target.value">
+
+    <ul class="lista-fotos">
+      <li class="lista-fotos-item" v-for="foto of fotosComFiltro">
+
+        <meu-painel :titulo="foto.titulo">
+          <imagem-responsiva :url="foto.url" :titulo="foto.titulo"></imagem-responsiva>         
+        </meu-painel>
+
       </li>
-    </ul>    
+    </ul>
   </div>
 </template>
 
 <script>
-export default {
-  data() {
-    return{
+  import Painel from './components/shared/painel/Painel.vue';
+  import ImagemResponsiva from './components/shared/imagem-responsiva/ImagemResponsiva.vue';
 
-      titulo: 'FotoPic',
-      fotos: [
-        {
-          url: 'http://tudosobrecachorros.com.br/wp-content/uploads/como-fazer-seu-cachorro-feliz-1024x686.jpg',
-          titulo: 'cachorro'
-        },
-        {
-          url: 'https://blog.emania.com.br/content/uploads/2016/01/cachorro-curiosidades.jpg',
-          titulo: 'cachorro-dois'
+  export default {
+
+    components: {
+      'meu-painel': Painel,
+      'imagem-responsiva': ImagemResponsiva
+    },
+
+    data() {
+      return {
+
+        titulo: 'FotoPic',
+        fotos: [],
+        filtro: ''
+
+      }
+    },
+
+    computed: {
+      fotosComFiltro() {
+        if (this.filtro) {
+          let exp = new RegExp(this.filtro.trim(), 'i');
+          return this.fotos.filter(foto => exp.test(foto.titulo));
+        } else {
+          return this.fotos;
         }
-      ]      
+      }
+    },
+
+    created() {
+
+      this.$http.get('http://localhost:3000/v1/fotos') // Me devolve uma promisse
+        .then(res => res.json()) // Pegando a promisse e convertendo para json
+        .then(fotos => this.fotos = fotos, err => console.log(err)); // Acessando as fotos e mestrando log de erros caso tenha
+
     }
+
   }
-}
+
 </script>
 
 <style>
+  .centralizado {
+    text-align: center;
+  }
 
+  .corpo {
+    font-family: Helvetica, sans-serif;
+    margin: 0 auto;
+    width: 96%;
+  }
+
+  .lista-fotos {
+    list-style: none;
+  }
+
+  .lista-fotos .lista-fotos-item {
+    display: inline-block;
+  }
+
+  .filtro {
+    width: 100%;
+  }
 </style>
