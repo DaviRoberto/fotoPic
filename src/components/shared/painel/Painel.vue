@@ -62,4 +62,8 @@ export default {
 .painel-fade-leave-active, .painel-fade-enter-active{
     transition: opacity .3s;
 }
+
+.painel-conteudo {
+    overflow: hidden;
+}
 </style>

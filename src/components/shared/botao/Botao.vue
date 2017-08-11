@@ -5,7 +5,6 @@
 
 <script>
 export default {
-    // ['tipo', 'rotulo', 'confirmacao', 'estilo']
     props: {        
         tipo:{
             required: true,
