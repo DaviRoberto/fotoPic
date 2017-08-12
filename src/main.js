@@ -18,3 +18,5 @@ new Vue({
   router,
   render: h => h(App)
 })
+
+Vue.http.options.root = 'http://localhost3000';
