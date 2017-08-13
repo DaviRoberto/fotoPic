@@ -10,7 +10,13 @@ export default class FotoService {
 
         return this._resource
             .query() // query == GET
-            .then(res => res.json()); // Pegando a promisse e convertendo para json
+            .then(
+                res => res.json(), 
+                err => {   // then(res => res.json() - Pegando a promisse e convertendo para json
+                    console.log(err);
+                    throw new Error('Não foi possível obter as fotos. Tente mais tarde');
+                }
+            ) 
 
     }
 
@@ -32,7 +38,12 @@ export default class FotoService {
 
     apaga(id) {
 
-        return this._resource.delete({ id });
+        return this._resource
+        .delete({ id })
+        .then(null, err => {
+            console.log(err);
+            throw new Error('Não foi possível remover a foto');
+        });
     }
 
     busca(id) {
