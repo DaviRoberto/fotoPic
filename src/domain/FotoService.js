@@ -16,14 +16,29 @@ export default class FotoService {
 
     cadastra(foto) {
 
-        return this._resource
-            .save(this.foto); // o método save realiza um POST por debaixo dos panos enviado os dados passado como parâmetro
+        if (foto._id) {
+
+            return this._resource
+                .update({ id: foto._id }, foto)
+
+        } else {
+
+            return this._resource
+                .save(this.foto); // o método save realiza um POST por debaixo dos panos enviado os dados passado como parâmetro
+        }
+
 
     }
 
     apaga(id) {
 
         return this._resource.delete({ id });
+    }
+
+    busca(id) {
+        return this._resource
+            .get({ id })
+            .then(res => res.json());
     }
 
 }

@@ -11,7 +11,11 @@
         <meu-painel :titulo="foto.titulo">
           <imagem-responsiva v-meu-transform:scale.animate="1.1" :url="foto.url" :titulo="foto.titulo" />
           <meu-botao tipo="button" rotulo="REMOVER" @botaoAtivado="remove(foto)" :confirmacao="true" estilo="perigo" />
-  
+          
+          <router-link :to="{ name: 'altera', params: { id: foto._id } }">
+            <meu-botao tipo="button" rotulo="ALTERAR" />          
+          </router-link>
+
         </meu-painel>
       </li>
     </ul>
@@ -64,7 +68,7 @@ export default {
   methods: {
 
     remove(foto) {
-      this.service.apaga(foto._id)      
+      this.service.apaga(foto._id)
         .then(() => {
           let indice = this.fotos.indexOf(foto);
           this.fotos.splice(indice, 1);
@@ -81,7 +85,7 @@ export default {
 
     this.service = new FotoService(this.$resource);
     this.service
-      .lista() 
+      .lista()
       .then(fotos => this.fotos = fotos, err => console.log(err)); // Acessando as fotos e mestrando log de erros caso tenha
 
   }
