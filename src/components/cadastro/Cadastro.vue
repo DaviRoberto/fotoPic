@@ -12,7 +12,7 @@
             <div class="controle">
                 <label for="url">URL</label>
                 <input id="url" autocomplete="off" v-model.lazy="foto.url">
-                <imagem-responsiva v-show="foto.url" :url="foto.url" :titulo="foto.titulo"/>
+                <imagem-responsiva v-show="foto.url" :url="foto.url" :titulo="foto.titulo" />
             </div>
     
             <div class="controle">
@@ -35,7 +35,8 @@
 
 import ImagemResponsiva from '../shared/imagem-responsiva/ImagemResponsiva.vue'
 import Botao from '../shared/botao/Botao.vue';
-import Foto from  '../../domain/Foto';
+import Foto from '../../domain/Foto';
+import FotoService from '../../domain/FotoService';
 
 export default {
 
@@ -55,17 +56,23 @@ export default {
     methods: {
 
         grava() {
-
-            this.$http.post('http://localhost:3000/v1/fotos', this.foto)
-                .then(() => new Foto(), err => console.log(err));            
             
-            this.foto = new Foto();
+            this.service
+                .cadastra(this.foto)
+                .then(() => this.foto = new Foto(), err => console.log(err));
+
         }
+    },
+
+    created() {
+
+        this.service = new FotoService(this.$resource);
     }
 
 }
 
 </script>
+
 <style scoped>
 .centralizado {
     text-align: center;
