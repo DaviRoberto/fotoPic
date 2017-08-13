@@ -8,12 +8,14 @@
         <form @submit.prevent="grava()">
             <div class="controle">
                 <label for="titulo">TÍTULO</label>
-                <input id="titulo" autocomplete="off" v-model.lazy="foto.titulo">
+                <input name="titulo" v-validate data-vv-rules="required|min:3|max:30" id="titulo" autocomplete="off" v-model="foto.titulo">
+                <span class="erro" v-show="errors.has('titulo')">{{ errors.first('titulo') }}</span>
             </div>
     
             <div class="controle">
                 <label for="url">URL</label>
-                <input id="url" autocomplete="off" v-model.lazy="foto.url">
+                <input name="url" v-validate data-vv-rules="required" id="url" autocomplete="off" v-model="foto.url">
+                <span class="erro" v-show="errors.has('url')">{{ errors.first('url') }}</span>
                 <imagem-responsiva v-show="foto.url" :url="foto.url" :titulo="foto.titulo" />
             </div>
     
@@ -60,13 +62,19 @@ export default {
 
         grava() {
 
-            this.service
-                .cadastra(this.foto)
-                .then(() => {
-                    if (this.id) this.$router.push({ name: 'home' });
-                    this.foto = new Foto()
-                }, err => console.log(err));
+            this.$validator
+                .validateAll()
+                .then(sucess => {
+                    if (sucess) {
 
+                        this.service
+                            .cadastra(this.foto)
+                            .then(() => {
+                                if (this.id) this.$router.push({ name: 'home' });
+                                this.foto = new Foto()
+                            }, err => console.log(err));
+                    }
+                });
         }
     },
 
@@ -109,5 +117,17 @@ export default {
 
 .centralizado {
     text-align: center;
+}
+
+.erro {
+    background-color: #e93f35;
+    color: #fff;
+    border-radius: 0 0 6px 6px;
+    padding: 3px 5px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 13px;
+    position: absolute;
+    width: 230px;
+    text-align: left;
 }
 </style>
