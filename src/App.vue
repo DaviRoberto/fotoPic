@@ -1,8 +1,8 @@
 <template>
   <div class="corpo">
   
-    <meu-menu :rotas="routes"/>
-
+    <meu-menu :rotas="routes" />
+  
     <transition name="pagina">
       <router-view></router-view>
     </transition>
@@ -23,7 +23,7 @@ export default {
   data() {
 
     return {
-      routes
+      routes: routes.filter(route => route.menu)
     }
 
   }
@@ -37,11 +37,13 @@ export default {
   width: 96%;
 }
 
-.pagina-enter, .pagina-leave-active{
-    opacity: 0;
+.pagina-enter,
+.pagina-leave-active {
+  opacity: 0;
 }
 
-.pagina-leave-active, .pagina-enter-active{
-    transition: opacity .3s;
+.pagina-leave-active,
+.pagina-enter-active {
+  transition: opacity .3s;
 }
 </style>
